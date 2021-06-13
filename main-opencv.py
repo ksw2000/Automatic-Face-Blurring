@@ -18,7 +18,9 @@ def get_face(frame):
     # 第一個參數是圖源
     # 第二個參數是在掃描時搜尋窗口的比例，預設是 1.1
     # 第三個參數是指檢索成功的矩形其相鄰的其他矩形，至少要距離幾個相素，預設是 3
-    faces = faceDetector.detectMultiScale(frame, 1.1, 3)
+    # https://blog.csdn.net/itismelzp/article/details/50379359
+    faces = faceDetector.detectMultiScale(
+        frame, 1.05, 4, flags=cv2.CASCADE_DO_CANNY_PRUNING)
     res = []
     for (x, y, w, h) in faces:
         res.append([x, y, x+w, y+h])

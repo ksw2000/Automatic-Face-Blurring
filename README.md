@@ -21,7 +21,8 @@ docker 的部分有提供一個 `docker/build-image.cmd` 和 `docker/run-contain
 ## Quick start
 ```shell
 py main-opencv.py   # 以 open cv 實現人臉辨識
-py main-dlib.py     # 以 dlib 實現人臉辨識
+py main-fr.py       # 以 face-recognition 套件實現人臉辨識
+py main-dlib.py     # 以 dlib (HOG) 實現人臉辨識
 ```
 
 + /
