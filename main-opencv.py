@@ -13,7 +13,7 @@ import cv2
 # https://github.com/adarsh1021/facedetection/blob/master/haarcascade_frontalface_default.xml
 faceDetector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-# @return left, top, right, bottom, frame
+# @return left, top, right, bottom
 def get_face(frame):
     # 第一個參數是圖源
     # 第二個參數是在掃描時搜尋窗口的比例，預設是 1.1
@@ -30,7 +30,7 @@ def mosaic_video(frame, left, top, right, bottom):
         frame[top:bottom, left:right], (59, 59), 0)
 
 video_src_path = "./demo.mp4"
-video_dest_path = "./demo-res.mp4"
+video_dest_path = "./demo-res-cv.mp4"
 
 # 讀取影片相關資訊
 video_src = cv2.VideoCapture(video_src_path)

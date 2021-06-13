@@ -1,9 +1,7 @@
 # 2021/06 
 # Arthur: 
-#   1. hana:    face detect
-#   2. sky:     mosaic
-#   3. annie:   car plate detection
-#   4. kashiwa: integration
+#   1. Kashiwa: face detect by dlib & integration
+#   2. Sky:     mosaic
 # Reference:
 # 1. http://dlib.net/face_detector.py.html
 
@@ -13,7 +11,7 @@ import dlib
 # face detector
 faceDetector = dlib.get_frontal_face_detector()
 
-# @return left, top, right, bottom, frame
+# @return left, top, right, bottom
 def get_face(frame):
     # .run()
     # The first argument is the source of image
@@ -36,7 +34,7 @@ def mosaic_video(frame, left, top, right, bottom):
         frame[top:bottom, left:right], (59, 59), 0)
 
 video_src_path = "./demo.mp4"
-video_dest_path = "./demo-res-2.mp4"
+video_dest_path = "./demo-res-dlib.mp4"
 
 # 讀取影片相關資訊
 video_src = cv2.VideoCapture(video_src_path)
