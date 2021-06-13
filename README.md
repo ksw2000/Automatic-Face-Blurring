@@ -27,11 +27,12 @@ py main-dlib.py     # 以 dlib 實現人臉辨識
 + /
     + docker/ *build docker environment*
     + image/ *DEMO for face.py*
-    + demo.mp4 *各位自己放，不然github炸掉*
+    + demo.mp4 *各位自己放，不然github會炸掉*
     + face.py *by Hana*
     + init.py *Linux環境初始化小幫手*
-    + main-dlib.py
-    + main-opencv.py
+    + main-dlib.py *臉部偵測以 dlib 實作*
+    + main-fr.py *臉部偵測以 face-recognition 實作*
+    + main-opencv.py *臉部偵測以 openCV2 實作*
     + video.py *by Sky*
 
 ## Some problems
