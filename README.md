@@ -1,25 +1,13 @@
 # 人臉打馬神器
 
-一個可以把非特定人士的臉打馬掉的程式，適合 Youtuber 剪片，目前還在測試接段
+一個可以把非特定人士的臉打馬掉的程式，適合 Youtuber 剪片，目前還在測試階段 :smile:
 
 ## 瓶頸
 
-1. OpenCV 人臉偵測跟屎一樣
-    > 法一：圖片先不要先轉灰(範例通常都有轉灰)
-    >
-    > 法二：改用 dlib 來偵測，但 dlib 效果也不太行，豆頁痛
+1. OpenCV 人臉偵測很差 → 改用 dlib
 2. OpenCV 出來的影片沒有聲音
-3. 大影片效能很差
+3. 大影片效能很差 → 可以先做壓縮
 
-## 環境
-
-### linux
-```shell
-sh init.sh
-```
-
-### docker :whale:
-docker 的部分有提供一個 `docker/build-image.cmd` 和 `docker/run-container.cmd` 可能有些要自己改一下，我自己也不太會用，嘿嘿~
 
 ## Quick start
 ```shell
@@ -34,12 +22,29 @@ py main-dlib.py     # 以 dlib (HOG) 實現人臉辨識
         + image/ *DEMO for face.py*
         + face.py *by Hana*
         + video.py *by Sky*
-        + recoginition.py *by Annie*
+        + recognition.py *by Annie*
     + init.sh *Linux環境初始化小幫手*
     + main-dlib.py *臉部偵測以 dlib 實作*
     + main-fr.py *臉部偵測以 face-recognition 實作*
-    + main-fr-recog.py *臉部偵測並支援人臉辨識*
     + main-opencv.py *臉部偵測以 openCV2 實作*
+
+1. `/test/face.py` 偵測人臉範圍，由 face_recognition 實作 by Hana
+2. `/test/video.py` 偵對特定幀特定範圍上馬賽克，由 openCV 實作 by Sky
+3. `/test/recognition.py` 給定兩張人臉，判定是否相同，由 face_recognition 實作 by Annie
+4. `main-dlib.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
+5. `main-fr.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
+
+
+## Environment
+
+### linux
+```shell
+sh init.sh
+```
+
+### docker :whale:
+1. Build an image by `docker/build-image.cmd` 
+2. Create a new container by `docker/run-container.cmd`
 
 ## Some problems
 
@@ -54,5 +59,5 @@ py main-dlib.py     # 以 dlib (HOG) 實現人臉辨識
     參考：[https://www.pyimagesearch.com/2018/01/22/install-dlib-easy-complete-guide/](https://www.pyimagesearch.com/2018/01/22/install-dlib-easy-complete-guide/)
 
 3. Windows dlib 裝不起來
-    + 要先裝 cmake
-    + 然後裝 Visual studio 
+    + install `cmake` first
+    + install `Visual studio` (2015)
