@@ -1,5 +1,5 @@
 # 2021/06 
-# Arthur: 
+# Authur: 
 #   1. Hana:    face detect by facial_recognition
 #   2. Sky:     mosaic
 #   3. Kashiwa: integration

@@ -1,5 +1,5 @@
 # 2021/06 
-# Arthur: 
+# Authur: 
 #   1. Kashiwa: face detect by dlib & integration
 #   2. Sky:     mosaic
 # Reference:

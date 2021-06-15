@@ -1,5 +1,5 @@
 # 2021/06 
-# Arthur: 
+# Authur: 
 #   1. Kashiwa: openCV detect face & intergration 
 #   2. Sky: mosaic
 
