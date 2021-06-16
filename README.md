@@ -22,18 +22,20 @@ py main-dlib.py     # 以 dlib (HOG) 實現人臉辨識
         + image/ *DEMO for face.py*
         + face.py *by Hana*
         + video.py *by Sky*
+        + recognition-dlib.py *by Kashiwa*
         + recognition.py *by Annie*
     + init.sh *Linux環境初始化小幫手*
-    + main-dlib.py *臉部偵測以 dlib 實作*
+    + main-dlib-full.py *全部以 dlib 實作*
+    + main-dlib.py *臉部偵測以 dlib 實作，辨識以 face-recognition 實作*
     + main-fr.py *臉部偵測以 face-recognition 實作*
     + main-opencv.py *臉部偵測以 openCV2 實作*
 
 1. `/test/face.py` 偵測人臉範圍，由 face_recognition 實作 by Hana
 2. `/test/video.py` 偵對特定幀特定範圍上馬賽克，由 openCV 實作 by Sky
 3. `/test/recognition.py` 給定兩張人臉，判定是否相同，由 face_recognition 實作 by Annie
-4. `main-dlib.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
-5. `main-fr.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
-
+4. `main-dlib-full.py` 臉部偵測與排除特定臉孔皆由 dlib 實作
+5. `main-dlib.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
+6. `main-fr.py` 臉部偵測由 dlib 實作，排除特定臉孔由 face_recognition 實作
 
 ## Environment
 
