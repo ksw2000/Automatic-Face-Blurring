@@ -1,10 +1,11 @@
 # 2021/06/16
-# Authur: Kashiwa
+# Authur: Kashiwa, Annie, Hana, Sky
 # Reference: https://www.tpisoftware.com/tpu/articleDetails/950
 
 import cv2
 import dlib
 import numpy
+import argparse
 
 # 宣告三個分類器
 # face detector: 臉部偵測，偵測臉部範圍
@@ -19,7 +20,7 @@ facerec = dlib.face_recognition_model_v1(
 
 def target_images_descriptor(imgList, decThreshold=0):
     descriptorList = []
-    for img in imgList:        
+    for img in imgList:
         faces, _, _ = faceDetector.run(img, 1, decThreshold)
         for _, d in enumerate(faces):
             shape = sp(img, d)
@@ -28,7 +29,7 @@ def target_images_descriptor(imgList, decThreshold=0):
     return descriptorList
 
 
-def mosaic_except_target(frame, targetDescriptorList, recThreshold=.58, decThreshold = 0):
+def mosaic_except_target(frame, targetDescriptorList, recThreshold=.58, decThreshold=0, showDescriptor=False):
     # targetDescriptorList 是所有 target 圖片中人臉的 descriptor
     # decThreshold 是偵測人臉的最低門檻，值越高越接近人臉
     # recThreshold 是偵測相同臉旦的最高門檻，值越低兩者越相近
@@ -44,7 +45,7 @@ def mosaic_except_target(frame, targetDescriptorList, recThreshold=.58, decThres
 
         shape = sp(frame, face)
         faceDescriptor = facerec.compute_face_descriptor(frame, shape)
-     
+
         # 取得該張臉在 target list 中最小值
         dist = 1
         for targetDescriptor in targetDescriptorList:
@@ -53,7 +54,7 @@ def mosaic_except_target(frame, targetDescriptorList, recThreshold=.58, decThres
                 dist = candidate
 
         location_dists_pair.append({
-            "dist" : dist,
+            "dist": dist,
             "locations": (left, top, right, bottom)
         })
 
@@ -73,26 +74,30 @@ def mosaic_except_target(frame, targetDescriptorList, recThreshold=.58, decThres
             # 非目標臉 ─ 打馬
             mosaic(frame, left, top, right, bottom)
 
-        cv2.putText(frame, str(pair['dist']), (left, top), cv2.FONT_HERSHEY_PLAIN,
-                    1, (255, 255, 0), 1, cv2.LINE_AA)
+        if showDescriptor:
+            cv2.putText(frame, str(pair['dist']), (left, top), cv2.FONT_HERSHEY_PLAIN,
+                        1, (255, 255, 0), 1, cv2.LINE_AA)
 
-def mosaic_face(frame):
+
+def mosaic_face(frame, decThreshold=0):
     # faceDetector.run()
     # 第一個參數是來源圖
     # 第二個參數是偵測的最大次數
     # 第三個參數是門檻值，只有信心值比這個門檻值高的臉會被回傳
     # 信心值越高越有可能是臉
-    faces, _, _ = faceDetector.run(frame, 1, 0)
+    faces, _, _ = faceDetector.run(frame, 1, decThreshold)
     height, width = frame.shape[0], frame.shape[1]
-    
+
     for _, f in enumerate(faces):
         left, top = max(0, f.left()), max(0, f.top())
         right, bottom = min(width, f.right()), min(height, f.bottom())
         mosaic(frame, left, top, right, bottom)
 
+
 def mosaic(frame, left, top, right, bottom):
     frame[top:bottom, left:right] = cv2.GaussianBlur(
         frame[top:bottom, left:right], (59, 59), 0)
+
 
 def rectangle(frame, left, top, right, bottom):
     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 3)
@@ -101,14 +106,15 @@ def rectangle(frame, left, top, right, bottom):
 # video_scr_path string 原影片路徑
 # video_dest_path string 生成影片路徑
 # target_img_list list 排除的人臉路徑
-def video_generator(video_src_path, video_dest_path, target_img_list):
+
+
+def video_generator(video_src_path, video_dest_path, target_img_list, recThreshold=.58, decThreshold=0, showDescriptor=False):
     cv2_target_img_list = []
     for img in target_img_list:
         cv2_target_img_list.append(cv2.imread(img))
-    
+
     target_descriptors = target_images_descriptor(cv2_target_img_list)
-    
-    # 是否啟用排除特定人臉模式
+
     recog_mode = len(target_img_list) != 0
 
     if recog_mode:
@@ -116,7 +122,6 @@ def video_generator(video_src_path, video_dest_path, target_img_list):
     else:
         print("Face recoginition mode OFF\n\n")
 
-    # 讀取影片相關資訊
     video_src = cv2.VideoCapture(video_src_path)
     video_dest = cv2.VideoWriter(
         video_dest_path, cv2.VideoWriter_fourcc(*'mp4v'),
@@ -126,7 +131,6 @@ def video_generator(video_src_path, video_dest_path, target_img_list):
         )
     )
 
-    # 開始一幀一幀讀取
     success, frame = video_src.read()
     if not success:
         print("Error opening video stream or file")
@@ -135,9 +139,10 @@ def video_generator(video_src_path, video_dest_path, target_img_list):
     count = 0
     while success:
         if recog_mode:
-            mosaic_except_target(frame, target_descriptors)
+            mosaic_except_target(frame, target_descriptors,
+                                 recThreshold=recThreshold, decThreshold=decThreshold, showDescriptor=showDescriptor)
         else:
-            mosaic_face(frame)
+            mosaic_face(frame, decThreshold=decThreshold)
 
         if count % 30 == 0:
             print("Finish %d frames" % (count))
@@ -147,14 +152,56 @@ def video_generator(video_src_path, video_dest_path, target_img_list):
         success, frame = video_src.read()
 
     video_src.release()
-    cv2.destroyAllWindows()
 
+
+"""
+example
+
+(1)
+source: src.mp4
+target: []
+python main.py src.mp4
+
+    - output: src-res.mp4
+
+(2)
+source: src.mp4
+target: [target1.png]
+python main.py src.mp4 -t target1.png
+
+    - output: src-res.mp4
+
+(3)
+source: src.mp4
+output: src-mosaic.mp4
+target: [target.png, target2.png]
+python main.py src.mp4 -o src-mosaic.mp4 -t target1.png target2.png
+
+    - output: src-mosic.mp4
+"""
 
 if __name__ == '__main__':
-    # video_src_path        指定輸入之影片位置
-    # video_dest_path       指定輸出之影片位置
-    # target_img_path_list  指定不會被打馬的人臉
-    video_src_path = './demo/src.mp4'
-    video_dest_path = './demo/res.mp4'
-    target_img_path_list = ['./demo/target.png']
-    video_generator(video_src_path, video_dest_path, target_img_path_list)
+    parser = argparse.ArgumentParser(prog="Blur face in video",
+                                     description="Given a video and some target faces, it can mosaic all the faces in the video except the target faces.")
+    parser.add_argument('args1', type=str, help='specify input file',
+                        nargs=1)
+    parser.add_argument('-o', help='specify output file',
+                        metavar='', nargs='?')
+    parser.add_argument('-d', '--detection-threshold', type=float, default=0,
+                        help='specify detection thresold, default is 0', metavar='')
+    parser.add_argument('-r', '--recognition-threshold', default=.58, nargs='?',
+                        type=float,  help='specify output file, default is 0.58', metavar='')
+    parser.add_argument(
+        '-t', '--target', help="the faces do not need masaic a.jpg b.jpg c.jpg", default=[], nargs='*', metavar='')
+    parser.add_argument(
+        '--show', help="show descriptor number if avaliable", action='store_true')
+    args = parser.parse_args()
+
+    src = args.args1[0]
+    out = args.o
+    if args.o is None:
+        parts = src.split(".")
+        out = ".".join(parts[:-1]) + "-res" + "." + parts[-1]
+
+    video_generator(src, out, args.target, decThreshold=args.detection_threshold,
+                    recThreshold=args.recognition_threshold, showDescriptor=args.show)

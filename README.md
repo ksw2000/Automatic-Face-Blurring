@@ -2,37 +2,30 @@
 
 一個可以把非特定人士的臉打馬掉的程式，適合 Youtuber 剪片，目前還在測試階段 :smile:
 
-## 瓶頸
-
-1. OpenCV 出來的影片沒有聲音
-
 ## Quick start
 
 ```shell
-py main.py
+# 人臉馬賽克
+py main.py src.mp4
+
+# 排除特定人臉
+py main.py src.mp4 -t target1.png target2.jpg
+
+# 指定輸出名稱
+py main.py src.mp4 -t target1.png -o my-video.mp4
+
+# 印出臉部特徵值
+py main.py src.mp4 -t target1.png --show
 ```
 
 + /
     + docker/ *build docker environment*
     + dlib-dat/ *dlib 的分類器*
-    + test/
+    + test/ *測試用檔案*
+        + another-ver/ *以其他套件進行實作*
         + image/ *DEMO for face.py*
-        + face.py *by Hana*
-        + video.py *by Sky*
-        + recognition-dlib.py *by Kashiwa*
-        + recognition.py *by Annie*
     + init.sh *Linux環境初始化小幫手*
-    + main-dlib.py *以 dlib 實作臉部偵測，以 face-recognition 實作臉部辨識*
-    + main-fr.py *以 face-recognition 實作臉部偵測及辨識*
-    + main-opencv.py *僅以 openCV2 實作臉部偵測*
-    + main.py *效果最好的程式，以 dlib 實作*
-
-|  | 臉部偵測 | 臉部辨識 |
-|--|---------|----------|
-| main-dlib.py | face_recognition | dlib |
-| main-fr.py | face_recognition | face_recognition |
-| main-opencv.py | open cv | 不支援 |
-| main.py | dlib | dlib |
+    + main.py
 
 **測試檔案**
 
@@ -40,6 +33,12 @@ py main.py
 2. `/test/video.py` 偵對特定幀特定範圍上馬賽克，由 openCV 實作 by Sky
 3. `/test/recognition.py` 給定兩張人臉，判定是否相同，由 face_recognition 實作 by Annie
 4. `/test/recognition-dlib.py` 改用 dlib 實作 by Kashiwa
+5. `/test/another-ver/` 以其他套件實作 main.py
+    |  路徑  | 臉部偵測 | 臉部辨識 |
+    |--------|---------|----------|
+    | `main-dlib.py` | face_recognition | dlib |
+    | `main-fr.py` | face_recognition | face_recognition |
+    | `main-opencv.py` | open cv | 不支援 |
 
 ## Environment
 
