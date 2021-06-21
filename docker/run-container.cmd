@@ -5,9 +5,5 @@
 
 cd ../
 
-IF "%~1" == "" GOTO NoName
-echo run ubuntu18.04...
-docker run -v "%cd%":/ai --name %1 -it ubuntu18.04
-
-:NoName
-docker run -v "%cd%":/ai -it ubuntu18.04
+echo run dlib.cpu...
+docker run -v "%cd%":/ai --name ai.project -it dlib.cpu
